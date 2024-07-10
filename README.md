@@ -5,10 +5,10 @@ Este repositorio contiene un script de Python que utiliza la biblioteca `Beautif
 
 
 **Características:**
-* **Scraping de la Web Dirigido**: El script está diseñado para extraer contenido de capítulos de un sitio web específico, asegurándose de que solo se recopile datos relevantes.
-* 
+* **Scraper Web Dirigido**: El script está diseñado para extraer contenido de capítulos de un sitio web específico, asegurándose de que solo se recopile datos relevantes.
+  
 * **Identificación Eficiente de Capítulos**: El script utiliza `BeautifulSoup` `re` `request` para analizar la estructura HTML del sitio web y identificar los capítulos, permitiendo una extracción de datos precisa y eficiente.
-* 
+  
 * **Salida de Archivos de Texto**: El contenido de los capítulos extraído se guarda como archivos de texto, lo que facilita la lectura, análisis o procesamiento adicional.
 * 
 
