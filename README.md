@@ -10,7 +10,7 @@ Este repositorio contiene un script de Python que utiliza la biblioteca `Beautif
 * **Identificación Eficiente de Capítulos**: El script utiliza `BeautifulSoup` `re` `request` para analizar la estructura HTML del sitio web y identificar los capítulos, permitiendo una extracción de datos precisa y eficiente.
   
 * **Salida de Archivos de Texto**: El contenido de los capítulos extraído se guarda como archivos de texto, lo que facilita la lectura, análisis o procesamiento adicional.
-* 
+  
 
 **Cómo Funciona:**
 1. El script envía una solicitud HTTP al sitio web objetivo y recopila el contenido HTML.
