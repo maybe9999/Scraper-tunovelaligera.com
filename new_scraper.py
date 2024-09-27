@@ -7,6 +7,7 @@ header = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/5
 initialUrl = input("Ingrese la URL del capitulo a obtener: ") or 'https://tunovelaligera.com/mi-sistema-de-fusion/mi-sistema-de-fusion-capitulo-1/'
 archivo_actual = 0
 capitulos_guardados = 0
+arch_txt = None
 
 #--------------------------------------------------------------------------------------------------------------#
 
@@ -58,27 +59,27 @@ def get_chapter_content(soup_function): #Se puede y se debe mejorar (arreglar)
     
     return historia_element
 
-def create_new_file(seriesName="Unknown", currentVolume="?", currentChapter=0):
+def create_new_file(seriesName="Unknown", currentVolume="X", currentChapter=0):
+    global archivo_actual, arch_txt
     archivo_actual += 1
-    print(f"Name File: -{name_series}_Volumen: {current_volume or "X"}_Capitulo: {current_chapter}.txt\n")
-    return open(f'-{seriesName}_Volumen: {currentVolume or "X"}_Capitulo: {currentChapter}.txt', 'a', encoding='utf-8').write("ï»¿" + "\n")
+    arch_txt = open(f'-{seriesName}...V_{currentVolume}...C_{currentChapter}.txt', 'a', encoding='utf-8')
 
 def get_series_name(url):
-    return re.search(r'tunovelaligera\.com/([^/]+)/', url).group(1) or "Error al obtener nombre..."
+    return re.search(r'tunovelaligera\.com/([^/]+)/', url).group(1) or "Unknown"
 
 def get_current_volume(url):
     try:
         return re.search(r'volumen.*?(\d+)',url).group(1)
     except AttributeError as err:
         print("Numero de volumen no encontrado...")
-        return ""
+        return "X"
     
 def get_number_of_chapter(url):
     return re.search(r'capitulo.*?(\d+)', url).group(1) or re.search(r'(\d+)', url).group(1)
 
 def get_link_next_chapter(soup_function):
     try:
-        soup_function.find('a', href=True, text="Siguiente Capítulo")['href']
+        return soup_function.find('a', href=True, text="Siguiente Capítulo")['href']
     except Exception as err:
         print("Error al obtener el link del siguiente capitulo. Razon: ", "Capitulo final" if isinstance(err, TypeError) else f"Desconocida... Error:{err}")
         return None
@@ -92,27 +93,29 @@ def msj_console():
 #--------------------------------------------------------------------------------------------------------------#
 
 while True:
+    current_volume = get_current_volume(initialUrl)
+    current_chapter = get_number_of_chapter(initialUrl)
+
     #Crea archivos con hasta 100 capitulos cada uno
     if capitulos_guardados >= 100 or capitulos_guardados == 0:
         if capitulos_guardados >= 100:
             arch_txt.close()
-        arch_txt = create_new_file(seriesName=name_series, currentVolume=current_volume, currentChapter=current_chapter)
         name_series = get_series_name(initialUrl)
+        create_new_file(seriesName=name_series, currentVolume=current_volume, currentChapter=current_chapter)
+        arch_txt.write("ï»¿" + "\n")
         archivo_actual += 1
         capitulos_guardados = 0
         
-    page, soup = fetch_page_content()
+    page, soup = fetch_page_content(initialUrl)
     chapter_content = get_chapter_content(soup)
 
-    current_volume = get_current_volume(initialUrl)
-    current_chapter = get_number_of_chapter(initialUrl)
-    
     arch_txt.write("-"*100 +f"\n {name_series}\nVolumen: {current_volume}, Capitulo:{current_chapter} \n{chapter_content}"+"\n"*12)
     capitulos_guardados += 1
     msj_console()
 
     initialUrl = get_link_next_chapter(soup)
-
+    print("url next", initialUrl)
     if not initialUrl:
+
         print("Finalizando programa")
         break
