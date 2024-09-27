@@ -57,7 +57,10 @@ def get_chapter_content(soup_function): #Se puede y se debe mejorar (arreglar)
             except:
                 historia_element = soup_function.find('div', class_=f"entry-content_wrap_s_{devolucion}")
     
-    return historia_element
+    historia_element = historia_element.get_text()
+    historia_final = re.sub(r'\n+', '\n', historia_element) #Remplaza saltos de linea consecutivos por solo 1 salto
+    historia_final2 = re.search(r"(.*?)Guardar Capitulo", historia_final, re.DOTALL).group(1).strip()
+    return historia_final2
 
 def create_new_file(seriesName="Unknown", currentVolume="X", currentChapter=0):
     global archivo_actual, arch_txt
@@ -103,7 +106,6 @@ while True:
         name_series = get_series_name(initialUrl)
         create_new_file(seriesName=name_series, currentVolume=current_volume, currentChapter=current_chapter)
         arch_txt.write("ï»¿" + "\n")
-        archivo_actual += 1
         capitulos_guardados = 0
         
     page, soup = fetch_page_content(initialUrl)
@@ -114,8 +116,7 @@ while True:
     msj_console()
 
     initialUrl = get_link_next_chapter(soup)
-    print("url next", initialUrl)
-    if not initialUrl:
 
+    if not initialUrl:
         print("Finalizando programa")
         break
