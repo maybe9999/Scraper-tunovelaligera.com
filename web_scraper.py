@@ -1,4 +1,5 @@
-import requests, re, time
+import requests, re
+from time import sleep
 from bs4 import BeautifulSoup
 
 hea = {
@@ -191,7 +192,7 @@ while base_url and archivo_actual <= 10000:  # Cambia el 2 por el número desead
             print(f"Enlace al siguiente capítulo: {next_chapter_link}")
             base_url = next_chapter_link
             print(base_url)
-            time.sleep(1)
+            sleep(1)
         else:
             print("No se encontró el enlace en la sección de código.")
     else:
